@@ -1,26 +1,38 @@
-import React, { useContext, useMemo, useRef, useState } from "react";
-import { GifContext } from "../context/GifContext";
-import { UserContext } from "../context/UserContext";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+// import { GifContext } from "../context/GifContext";
+// import { UserContext } from "../context/UserContext";
 import useFetch from "../hooks/useFetch";
 import GifDisplay from "./GifDisplay";
+import { connect } from "react-redux"
+import { addFavorite, removeFavorite, setSearch } from "../redux/actions";
 
-function SearchPage() {
-    const { activeUser } = useContext(UserContext);
-    const { favorites, addFavorite, removeFavorite } = useContext(GifContext);
+function SearchPage({
+    user,
+    addFavorite,
+    favorites,
+    removeFavorite,
+    search,
+    setSearch
+}) {
     const searchInput = useRef(null);
-    const [search, setSearch] = useState("");
-    const { data, error, loading } = useFetch(search);
+    const [query, setQuery] = useState("");
+    const { data, error, loading } = useFetch(query);
     const faveIds = useMemo(() => favorites.map((val) => val.id), [favorites]);
+    useEffect(() => {
+        if (data) {
+            setSearch(data);
+        }
+    }, [data, setSearch])
 
     return (
         <div>
-            <h2 className="text-center">Welcome: {activeUser}</h2>
+            <h2 className="text-center">Welcome: {user}</h2>
             <div className="flex gif-form">
                 <input id="query" placeholder="Search for a gif" ref={searchInput} />
                 <button
                     className="search-btn"
                     onClick={() => {
-                        setSearch(searchInput.current.value);
+                        setQuery(searchInput.current.value);
                     }}
                 >
                     Search
@@ -28,9 +40,9 @@ function SearchPage() {
             </div>
             {loading && <div>Loading</div>}
             {error && !loading && <h2>Something went wrong</h2>}
-            {data && !loading && (
+            {!error && search && !loading && (
                 <div className="flex">
-                    {data.map((val) => (
+                    {search.map((val) => (
                         <GifDisplay
                             key={val.id}
                             gif={val}
@@ -45,4 +57,19 @@ function SearchPage() {
     );
 }
 
-export default SearchPage;
+const mapStateToProps = (state) => {
+    return {
+        favorites: state.gifs.favorites,
+        user: state.user,
+        search: state.gifs.search
+    }
+}
+
+const mapDispatchToProps = {
+    setSearch,
+    addFavorite,
+    removeFavorite,
+}
+
+
+export default connect(mapDispatchToProps, mapStateToProps)(SearchPage);

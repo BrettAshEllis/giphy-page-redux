@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
+import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
 
-function Menu() {
-    const { activeUser } = useContext(UserContext);
+function Menu({ activeUser, children }) {
+    console.log(children);
     return (
         <nav className="menu flex">
             {!activeUser && (
@@ -40,4 +40,12 @@ function Menu() {
     );
 }
 
-export default Menu;
+const mapStateToProps = (state) => {
+    return {
+        activeUser: state.user,
+    };
+};
+
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

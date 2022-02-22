@@ -37,4 +37,3 @@ export default function useFetch(search) {
     }, [search]);
     return { data, error, loading };
 }
-e

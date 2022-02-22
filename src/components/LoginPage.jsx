@@ -1,9 +1,9 @@
-import React, { useCallback, useContext, useRef } from "react";
+import React, { useCallback, useRef } from "react";
+import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
+import { setUser } from "../redux/actions";
 
-function LoginPage() {
-    const { login } = useContext(UserContext);
+function LoginPage({ setUser }) {
     const usernameInput = useRef(null);
     const passwordInput = useRef(null);
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ function LoginPage() {
         ) {
             return;
         }
-        login(username);
+        setUser(username);
         navigate("/search");
     }, []);
     return (
@@ -40,4 +40,12 @@ function LoginPage() {
     );
 }
 
-export default LoginPage;
+const mapStateToProps = (state) => {
+    return {};
+};
+
+const mapDispatchToProps = {
+    setUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

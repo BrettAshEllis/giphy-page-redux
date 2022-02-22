@@ -1,14 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
+import { connect } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
 
-function ProtectedRoute({ isPrivate, children }) {
-    const { activeUser } = useContext(UserContext);
+function ProtectedRoute({ user, isPrivate, children }) {
     //! Is this a private route?
     const redirectTo = isPrivate ? "/login" : "/search";
     //! Is there an activeUser?
     //! Do the two work in combination
-    if ((activeUser && isPrivate) || (!activeUser && !isPrivate)) {
+    if ((user && isPrivate) || (!user && !isPrivate)) {
         //! If so, render the component
         return <>{children}</>;
     } else {
@@ -17,4 +16,12 @@ function ProtectedRoute({ isPrivate, children }) {
     }
 }
 
-export default ProtectedRoute;
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    };
+};
+
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProtectedRoute);

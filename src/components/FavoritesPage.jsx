@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import GifDisplay from "./GifDisplay";
-import { GifContext } from "../context/GifContext";
+import { removeFavorite } from "../redux/actions";
+import { connect } from "react-redux";
 
-function FavoritesPage() {
-    const { favorites, removeFavorite } = useContext(GifContext);
+function FavoritesPage({ favorites, removeFavorite, user }) {
     return (
         <div>
+            <h3>Favorites for {user}</h3>
             <div className="flex">
                 {favorites.map((val) => (
                     <GifDisplay
@@ -20,4 +21,12 @@ function FavoritesPage() {
     );
 }
 
-export default FavoritesPage;
+const mapStateToProps = (state) => {
+    return { user: state.user, favorites: state.gifs.favorites };
+};
+
+const mapDispatchToProps = {
+    removeFavorite,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FavoritesPage);

@@ -10,7 +10,7 @@ import LoginPage from "./components/LoginPage";
 import Menu from "./components/Menu";
 import SearchPage from "./components/SearchPage";
 import FavoritesPage from "./components/FavoritesPage";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoutes";
 
 function App() {
   return (
@@ -48,4 +48,3 @@ function App() {
 }
 
 export default App;
-e
