@@ -1,28 +1,27 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-// import { GifContext } from "../context/GifContext";
-// import { UserContext } from "../context/UserContext";
+import { connect } from "react-redux";
 import useFetch from "../hooks/useFetch";
 import GifDisplay from "./GifDisplay";
-import { connect } from "react-redux"
-import { addFavorite, removeFavorite, setSearch } from "../redux/actions";
+import { setSearch, addFavorite, removeFavorite } from "../redux/actions";
 
 function SearchPage({
     user,
-    addFavorite,
     favorites,
-    removeFavorite,
+    setSearch,
     search,
-    setSearch
+    addFavorite,
+    removeFavorite,
 }) {
     const searchInput = useRef(null);
     const [query, setQuery] = useState("");
     const { data, error, loading } = useFetch(query);
     const faveIds = useMemo(() => favorites.map((val) => val.id), [favorites]);
+    //! If there's data from the hook (on data change), set that into redux
     useEffect(() => {
         if (data) {
             setSearch(data);
         }
-    }, [data, setSearch])
+    }, [data, setSearch]);
 
     return (
         <div>
@@ -59,17 +58,16 @@ function SearchPage({
 
 const mapStateToProps = (state) => {
     return {
-        favorites: state.gifs.favorites,
         user: state.user,
-        search: state.gifs.search
-    }
-}
+        favorites: state.gifs.favorites,
+        search: state.gifs.search,
+    };
+};
 
 const mapDispatchToProps = {
     setSearch,
     addFavorite,
     removeFavorite,
-}
+};
 
-
-export default connect(mapDispatchToProps, mapStateToProps)(SearchPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchPage);
